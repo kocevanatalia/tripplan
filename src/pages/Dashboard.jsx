@@ -130,7 +130,8 @@ function Dashboard() {
         ) : (
           <div className="grid gap-4">
             {trips.map((trip) => (
-              <div key={trip.id} className="bg-white p-5 rounded-xl shadow">
+              <div key={trip.id} className="bg-white p-5 rounded-xl shadow cursor-pointer hover:shadow-lg transtition"
+              onClick={() => window.location.href = `/trip/${trip.id}`}>
                 <h3 className="text-xl font-semibold">{trip.title}</h3>
                 <p className="text-gray-600">{trip.destination}</p>
                 <p className="mt-2 text-sm">
