@@ -9,6 +9,7 @@ import {
     query,
     where,
     getDocs,
+    deleteDoc,
  } from "firebase/firestore";
 
 function TripDetails() {
@@ -83,6 +84,16 @@ function TripDetails() {
         console.log("Error adding activity:", error);
         alert(error.message);
     }  
+  };
+
+  const handleDeleteActivity = async (activityId) => {
+    try {
+      await deleteDoc(doc(db, "activities", activityId));
+      await fetchActivities();
+    } catch (error) {
+      console.log("Error deleting activity:", error);
+      alert(error.message);
+    }
   };
 
   const totalActivityCost = activities.reduce(
@@ -174,6 +185,11 @@ function TripDetails() {
                         <p className="mt-1">Time: {activity.time || "Not set"}</p>
                         <p>Cost: €{activity.cost || 0}</p>
                         <p className="mt-2 text-gray-600">{activity.notes}</p>
+                        <button 
+                          onClick={() => handleDeleteActivity(activity.id)}
+                          className="mt-3 text-red-500 hover:underline">
+                            Delete
+                          </button>
                     </div>
                 ))}
             </div>

@@ -8,6 +8,8 @@ import {
   query,
   where,
   getDocs,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 
 function Dashboard() {
@@ -30,6 +32,16 @@ function Dashboard() {
     }));
 
     setTrips(tripsData);
+  };
+
+  const handleDeleteTrip = async (tripId) => {
+    try {
+      await deleteDoc(doc(db, "trips", tripId));
+      await fetchTrips();
+    } catch (error) {
+      console.log("Error deleting trip:", error);
+      alert(error.message);
+    }
   };
 
   useEffect(() => {
@@ -138,6 +150,16 @@ function Dashboard() {
                   {trip.startDate} → {trip.endDate}
                 </p>
                 <p className="mt-2 font-medium">Budget: €{trip.budget}</p>
+                <div className="mt-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteTrip(trip.id);
+                    }}
+                    className="text-red-500 hover:underline">
+                      Delete Trip
+                    </button>
+                  </div>
               </div>
             ))}
           </div>
