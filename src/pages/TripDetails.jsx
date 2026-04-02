@@ -130,6 +130,14 @@ function TripDetails() {
     return groups;
   }, {});
 
+  Object.keys(groupedActivities).forEach((day) => {
+    groupedActivities[day].sort((a, b) => {
+      if (!a.time) return 1;
+      if (!b.time) return -1;
+      return a.time.localeCompare(b.time);
+    });
+  });
+
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div className="bg-white p-6 rounded-xl shadow">
