@@ -101,6 +101,35 @@ function TripDetails() {
     0
   );
 
+  const generateTripDays = (startDate, endDate) => {
+    const days = [];
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    let current = new Date(start);
+    let count = 1;
+
+    while (current <= end) {
+      days.push(`Day ${count}`);
+      current.setDate(current.getDate() + 1);
+      count++;
+    }
+
+    return days;
+  };
+
+  const tripDays = trip ? generateTripDays(trip.startDate, trip.endDate) : [];
+
+  const groupedActivities = activities.reduce((groups, activity) => {
+    if (!groups[activity.day]) {
+      groups[activity.day] = [];
+    }
+
+    groups[activity.day].push(activity);
+    return groups;
+  }, {});
+
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div className="bg-white p-6 rounded-xl shadow">
@@ -125,14 +154,18 @@ function TripDetails() {
         <h2 className="text-2xl font-bold mb-4">Add Activity</h2>
 
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
-          <input
-            type="text"
-            placeholder="Day (example: Day 1)"
+          <select
             className="border p-3 rounded-lg"
             value={day}
             onChange={(e) => setDay(e.target.value)}
-            required
-          />
+            required>
+              <option value="">Select a day</option>
+              {tripDays.map((tripDay) => (
+                <option key={tripDay} value={tripDay}>
+                  {tripDay}
+                </option>
+              ))}
+          </select>
 
           <input
             type="text"
@@ -175,24 +208,36 @@ function TripDetails() {
         <h2 className="text-2xl font-bold mb-4">Itinerary</h2>
 
         {activities.length === 0 ? (
-            <p className="text-gray-600">No activities yet.</p>
+          <p className="text-gray-600">No activities yet.</p>
         ) : (
-            <div className="grid gap-4">
-                {activities.map((activity) => (
-                    <div key={activity.id} className="border rounded-lg p-4">
-                        <p className="text-sm text-gray-500">{activity.day}</p>
-                        <h3 className="text-xl font-semibold">{activity.title}</h3>
+          <div className="space-y-6">
+            {tripDays.map((tripDay) => (
+              <div key={tripDay}>
+                <h3 className="text-xl font-bold mb-3">{tripDay}</h3>
+
+                {groupedActivities[tripDay]?.length ? (
+                  <div className="grid gap-4">
+                    {groupedActivities[tripDay].map((activity) => (
+                      <div key={activity.id} className="border rounded-lg p-4 bg-gray-50">
+                        <h4 className="text-lg font-semibold">{activity.title}</h4>
                         <p className="mt-1">Time: {activity.time || "Not set"}</p>
-                        <p>Cost: €{activity.cost || 0}</p>
+                        <p>Cost:  €{activity.cost || 0}</p>
                         <p className="mt-2 text-gray-600">{activity.notes}</p>
-                        <button 
+                        <button
                           onClick={() => handleDeleteActivity(activity.id)}
-                          className="mt-3 text-red-500 hover:underline">
-                            Delete
-                          </button>
-                    </div>
-                ))}
-            </div>
+                          className="mt-3 text-red-500 hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">No activities planned.</p>
+                )}
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
