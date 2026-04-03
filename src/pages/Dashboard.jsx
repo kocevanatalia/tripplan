@@ -10,6 +10,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 
 function Dashboard() {
@@ -21,6 +22,7 @@ function Dashboard() {
   const [endDate, setEndDate] = useState("");
   const [budget, setBudget] = useState("");
   const [trips, setTrips] = useState([]);
+  const [editingTripId, setEditingTripId] = useState(null);
 
   const fetchTrips = async () => {
     const q = query(collection(db, "trips"), where("userId", "==", user.uid));
@@ -44,6 +46,15 @@ function Dashboard() {
     }
   };
 
+  const handleEditTrip = (trip) => {
+    setTitle(trip.title || "");
+    setDestination(trip.destination || "");
+    setStartDate(trip.startDate || "");
+    setEndDate(trip.endDate || "");
+    setBudget(trip.budget || "");
+    setEditingTripId(trip.id);
+  };
+
   useEffect(() => {
     if (user) {
       fetchTrips();
@@ -54,25 +65,38 @@ function Dashboard() {
     e.preventDefault();
 
     try {
-      await addDoc(collection(db, "trips"), {
-        title,
-        destination,
-        startDate,
-        endDate,
-        budget: Number(budget),
-        userId: user.uid,
-        createdAt: serverTimestamp(),
-      });
+      if (editingTripId) {
+        await updateDoc(doc(db, "trips", editingTripId), {
+          title,
+          destination,
+          startDate,
+          endDate,
+          budget: Number(budget),
+        });
+
+        alert("Trip updated!");
+      } else {
+        await addDoc(collection(db, "trips"), {
+          title,
+          destination,
+          startDate,
+          endDate,
+          budget: Number(budget),
+          userId: user.uid,
+          createdAt: serverTimestamp(),
+        });
+
+        alert("Trip created!");
+      }
 
       setTitle("");
       setDestination("");
       setStartDate("");
       setEndDate("");
       setBudget("");
+      setEditingTripId(null);
 
       await fetchTrips();
-
-      alert("Trip created!");
     } catch (error) {
       console.log("Firebase error:", error);
       alert(error.message);
@@ -129,7 +153,7 @@ function Dashboard() {
           />
 
           <button className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 md:col-span-2">
-            Create Trip
+            {editingTripId ? "Update Trip" : "Create Trip"}
           </button>
         </form>
       </div>
@@ -151,6 +175,15 @@ function Dashboard() {
                 </p>
                 <p className="mt-2 font-medium">Budget: €{trip.budget}</p>
                 <div className="mt-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditTrip(trip);
+                    }}
+                    className="mr-4 text-blue-600 hover:underline"
+                  >
+                    Edit Trip
+                  </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

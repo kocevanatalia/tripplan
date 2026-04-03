@@ -258,7 +258,7 @@ function TripDetails() {
                         <p className="mt-2 text-gray-600">{activity.notes}</p>
                         <button
                           onClick={() => handleEditClick(activity)}
-                          className="mt-3 mr-4 text-blue-600 hover:undeline"
+                          className="mt-3 mr-4 text-blue-600 hover:underline"
                         >
                           Edit
                         </button>
