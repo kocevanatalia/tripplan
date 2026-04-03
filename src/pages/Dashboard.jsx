@@ -23,6 +23,7 @@ function Dashboard() {
   const [budget, setBudget] = useState("");
   const [trips, setTrips] = useState([]);
   const [editingTripId, setEditingTripId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchTrips = async () => {
     const q = query(collection(db, "trips"), where("userId", "==", user.uid));
@@ -103,6 +104,11 @@ function Dashboard() {
     }
   };
 
+  const filteredTrips = trips.filter((trip) => 
+    trip.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    trip.destination.toLowerCase().includes(searchTerm.toLowerCase()) 
+  );
+
   return (
     <div className="space-y-8">
       <div className="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
@@ -159,13 +165,23 @@ function Dashboard() {
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">Your Trips</h2>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <h2 className="text-2xl font-bold">Your Trips</h2>
 
-        {trips.length === 0 ? (
+          <input
+            type="text"
+            placeholder="Search by title or destination"
+            className="border p-3 rounded-lg w-full md:w-80"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        {filteredTrips.length === 0 ? (
           <p className="text-gray-600">No trips yet.</p>
         ) : (
           <div className="grid gap-4">
-            {trips.map((trip) => (
+            {filteredTrips.map((trip) => (
               <div key={trip.id} className="bg-white p-5 rounded-xl shadow cursor-pointer hover:shadow-lg transtition"
               onClick={() => window.location.href = `/trip/${trip.id}`}>
                 <h3 className="text-xl font-semibold">{trip.title}</h3>
