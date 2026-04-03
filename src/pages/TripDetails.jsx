@@ -10,6 +10,7 @@ import {
     where,
     getDocs,
     deleteDoc,
+    updateDoc,
  } from "firebase/firestore";
 
 function TripDetails() {
@@ -22,6 +23,7 @@ function TripDetails() {
   const [notes, setNotes] = useState("");
   const [cost, setCost] = useState("");
   const [activities, setActivities] = useState([]);
+  const [editingActivityId, setEditingActivityId] = useState(null);
 
   const fetchTrip = async () => {
     try {
@@ -63,27 +65,50 @@ function TripDetails() {
     e.preventDefault();
 
     try {
-        await addDoc(collection(db, "activities"), {
+        if (editingActivityId) {
+          await updateDoc(doc(db, "activities", editingActivityId), {
+            day,
+            title,
+            time,
+            notes,
+            cost: Number(cost),
+          });
+
+          alert("Activity updated!");
+        } else {
+          await addDoc(collection(db, "activities"), {
             tripId: id,
             day,
             title,
             time,
             notes,
             cost: Number(cost),
-        });
+          });
+
+          alert("Activity added!");
+        }
 
         setDay("");
         setTitle("");
         setTime("");
         setNotes("");
         setCost("");
-        await fetchActivities();
+        setEditingActivityId(null);
 
-        alert("Activity added!");
+        await fetchActivities();
     } catch (error) {
-        console.log("Error adding activity:", error);
+        console.log("Error saving activity:", error);
         alert(error.message);
     }  
+  };
+
+  const handleEditClick = (activity) => {
+    setDay(activity.day || "");
+    setTitle(activity.title || "");
+    setTime(activity.time || "");
+    setNotes(activity.notes || "");
+    setCost(activity.cost || "");
+    setEditingActivityId(activity.id);
   };
 
   const handleDeleteActivity = async (activityId) => {
@@ -207,7 +232,7 @@ function TripDetails() {
           />
 
           <button className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 md:col-span-2">
-            Add Activity
+            {editingActivityId ? "Update Activity" : "Add Activity"}
           </button>
         </form>
       </div>
@@ -231,6 +256,12 @@ function TripDetails() {
                         <p className="mt-1">Time: {activity.time || "Not set"}</p>
                         <p>Cost:  €{activity.cost || 0}</p>
                         <p className="mt-2 text-gray-600">{activity.notes}</p>
+                        <button
+                          onClick={() => handleEditClick(activity)}
+                          className="mt-3 mr-4 text-blue-600 hover:undeline"
+                        >
+                          Edit
+                        </button>
                         <button
                           onClick={() => handleDeleteActivity(activity.id)}
                           className="mt-3 text-red-500 hover:underline"
