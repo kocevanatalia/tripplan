@@ -24,6 +24,8 @@ function TripDetails() {
   const [cost, setCost] = useState("");
   const [activities, setActivities] = useState([]);
   const [editingActivityId, setEditingActivityId] = useState(null);
+  const [category, setCategory] = useState("Other");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const fetchTrip = async () => {
     try {
@@ -72,6 +74,7 @@ function TripDetails() {
             time,
             notes,
             cost: Number(cost),
+            category,
           });
 
           alert("Activity updated!");
@@ -83,6 +86,7 @@ function TripDetails() {
             time,
             notes,
             cost: Number(cost),
+            category,
           });
 
           alert("Activity added!");
@@ -94,6 +98,7 @@ function TripDetails() {
         setNotes("");
         setCost("");
         setEditingActivityId(null);
+        setCategory("Other");
 
         await fetchActivities();
     } catch (error) {
@@ -109,6 +114,7 @@ function TripDetails() {
     setNotes(activity.notes || "");
     setCost(activity.cost || "");
     setEditingActivityId(activity.id);
+    setCategory(activity.category || "Other");
   };
 
   const handleDeleteActivity = async (activityId) => {
@@ -125,6 +131,8 @@ function TripDetails() {
     (sum, activity) => sum + (activity.cost || 0),
     0
   );
+
+  const remainingBudget = trip ? trip.budget - totalActivityCost : 0;
 
   const generateTripDays = (startDate, endDate) => {
     const days = [];
@@ -146,7 +154,12 @@ function TripDetails() {
 
   const tripDays = trip ? generateTripDays(trip.startDate, trip.endDate) : [];
 
-  const groupedActivities = activities.reduce((groups, activity) => {
+  const visibleActivities =
+    selectedCategory === "All"
+      ? activities
+      : activities.filter((activity) => activity.category === selectedCategory);
+
+  const groupedActivities = visibleActivities.reduce((groups, activity) => {
     if (!groups[activity.day]) {
       groups[activity.day] = [];
     }
@@ -179,6 +192,11 @@ function TripDetails() {
             <p className="mt-2 text-sm text-gray-700">
                 Planned activity cost: €{totalActivityCost}
             </p>
+            <p 
+              className={`mt-2 text-sm font-medium ${remainingBudget < 0 ? "text-red-500" : "text-green-600"}`}
+            >
+              Remaining Budget: €{remainingBudget}
+            </p>
           </>
         )}
       </div>
@@ -208,6 +226,18 @@ function TripDetails() {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
+
+          <select 
+            className="border p-3 rounded-lg"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="Food">Food</option>
+            <option value="Sightseeing">Sightseeing</option>
+            <option value="Transport">Transport</option>
+            <option value="Accomodation">Accomodation</option>
+            <option value="Other">Other</option>
+          </select>
 
           <input
             type="time"
@@ -240,7 +270,23 @@ function TripDetails() {
       <div className="bg-white p-6 rounded-xl shadow">
         <h2 className="text-2xl font-bold mb-4">Itinerary</h2>
 
-        {activities.length === 0 ? (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {["All", "Food", "Sightseeing", "Transport", "Shopping", "Accomodation", "Other"].map((cat) =>(
+            <button 
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1 rounded-lg border ${
+                selectedCategory === cat
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "border-gray-300"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {visibleActivities.length === 0 ? (
           <p className="text-gray-600">No activities yet.</p>
         ) : (
           <div className="space-y-6">
@@ -253,6 +299,7 @@ function TripDetails() {
                     {groupedActivities[tripDay].map((activity) => (
                       <div key={activity.id} className="border rounded-lg p-4 bg-gray-50">
                         <h4 className="text-lg font-semibold">{activity.title}</h4>
+                        <p className="mt-1 text-sm text-gray-500">Category: {activity.category || "Other"}</p>
                         <p className="mt-1">Time: {activity.time || "Not set"}</p>
                         <p>Cost:  €{activity.cost || 0}</p>
                         <p className="mt-2 text-gray-600">{activity.notes}</p>
