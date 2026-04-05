@@ -181,6 +181,14 @@ function TripDetails() {
     });
   });
 
+  const uniqueLocations = [
+    ...new Set(
+      activities
+        .map((activity) => activity.location?.trim())
+        .filter((location) => location)
+    ),
+  ];
+
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div className="bg-white p-6 rounded-xl shadow">
@@ -297,6 +305,28 @@ function TripDetails() {
               {cat}
             </button>
           ))}
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h2 className="text-2xl font-bold mb-4">Map & Locations</h2>
+
+          {uniqueLocations.length === 0 ? (
+            <p className="text-gray-600">No locations added yet.</p>
+          ) : (
+            <div className="grid gap-3">
+              {uniqueLocations.map((location) => (
+                <a
+                  key={location}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="border rounded-lg p-4 hover:bg-gray-50 transition text-blue-600 hover:underline"
+                >
+                  {location}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         {visibleActivities.length === 0 ? (
