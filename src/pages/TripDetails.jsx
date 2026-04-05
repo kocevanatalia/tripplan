@@ -189,6 +189,11 @@ function TripDetails() {
     ),
   ];
 
+  const mapEmbedUrl = 
+    uniqueLocations.length > 0
+      ? `https://www.google.com/maps?q=${encodeURIComponent(uniqueLocations[0])}&output=embed`
+      : null;
+
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div className="bg-white p-6 rounded-xl shadow">
@@ -309,6 +314,18 @@ function TripDetails() {
 
         <div className="bg-white p-6 rounded-xl shadow">
           <h2 className="text-2xl font-bold mb-4">Map & Locations</h2>
+
+          {mapEmbedUrl && (
+            <div className="mb-6"> 
+              <iframe
+                title="Trip map"
+                src={mapEmbedUrl}
+                className="w-full h-80 rounded-xl border"
+                loading="lazy"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
 
           {uniqueLocations.length === 0 ? (
             <p className="text-gray-600">No locations added yet.</p>
