@@ -26,6 +26,7 @@ function TripDetails() {
   const [editingActivityId, setEditingActivityId] = useState(null);
   const [category, setCategory] = useState("Other");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [location, setLocation] = useState("");
 
   const fetchTrip = async () => {
     try {
@@ -75,6 +76,7 @@ function TripDetails() {
             notes,
             cost: Number(cost),
             category,
+            location,
           });
 
           alert("Activity updated!");
@@ -87,6 +89,7 @@ function TripDetails() {
             notes,
             cost: Number(cost),
             category,
+            location,
           });
 
           alert("Activity added!");
@@ -99,6 +102,7 @@ function TripDetails() {
         setCost("");
         setEditingActivityId(null);
         setCategory("Other");
+        setLocation("");
 
         await fetchActivities();
     } catch (error) {
@@ -115,6 +119,7 @@ function TripDetails() {
     setCost(activity.cost || "");
     setEditingActivityId(activity.id);
     setCategory(activity.category || "Other");
+    setLocation(activity.location || "");
   };
 
   const handleDeleteActivity = async (activityId) => {
@@ -239,6 +244,14 @@ function TripDetails() {
             <option value="Other">Other</option>
           </select>
 
+          <input 
+            type="text"
+            placeholder="Location"
+            className="border p-3 rounded-lg"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+
           <input
             type="time"
             className="border p-3 rounded-lg"
@@ -290,8 +303,12 @@ function TripDetails() {
           <p className="text-gray-600">No activities yet.</p>
         ) : (
           <div className="space-y-6">
-            {tripDays.map((tripDay) => (
-              <div key={tripDay}>
+            {tripDays
+              .filter((tripDay) => 
+                selectedCategory === "All" ? true : groupedActivities[tripDay]?.length
+              )
+              .map((tripDay) => (
+                <div key={tripDay}>
                 <h3 className="text-xl font-bold mb-3">{tripDay}</h3>
 
                 {groupedActivities[tripDay]?.length ? (
@@ -300,6 +317,21 @@ function TripDetails() {
                       <div key={activity.id} className="border rounded-lg p-4 bg-gray-50">
                         <h4 className="text-lg font-semibold">{activity.title}</h4>
                         <p className="mt-1 text-sm text-gray-500">Category: {activity.category || "Other"}</p>
+                        {activity.location ? (
+                          <p className="mt-1 text-sm text-gray-500">
+                            Location:{" "}
+                            <a
+                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.location)}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              {activity.location}
+                            </a>
+                          </p>
+                        ): (
+                          <p className="mt-1 text-sm text-gray-500">Location: Not set</p>
+                        )}
                         <p className="mt-1">Time: {activity.time || "Not set"}</p>
                         <p>Cost:  €{activity.cost || 0}</p>
                         <p className="mt-2 text-gray-600">{activity.notes}</p>
@@ -322,7 +354,8 @@ function TripDetails() {
                   <p className="text-gray-500">No activities planned.</p>
                 )}
               </div>
-            ))}
+                
+              ))}
           </div>
         )}
       </div>
