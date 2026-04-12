@@ -24,6 +24,7 @@ import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import Toast from "../components/Toast";
 
 const customMarkerIcon = L.icon({
   iconRetinaUrl: markerIcon2x,
@@ -77,6 +78,8 @@ function TripDetails() {
 
   const [lat, setLat] = useState(null);
   const [lon, setLon] = useState(null);
+
+  const [toastType, setToastType] = useState("success");
 
   const activityFormRef = useRef(null);
 
@@ -230,6 +233,7 @@ function TripDetails() {
           lon: coordinates.lon,
         });
 
+        setToastType("success");
         setSuccessMessage("Activity updated succesffully!");
       } else {
         await addDoc(collection(db, "activities"), {
@@ -245,6 +249,7 @@ function TripDetails() {
           lon: coordinates.lon,
         });
 
+        setToastType("success");
         setSuccessMessage("Activity added successfully");
       }
 
@@ -418,6 +423,7 @@ function TripDetails() {
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
+      <Toast message={successMessage} type={toastType} />
       <div className={`p-6 rounded-xl shadow ${cardClass}`}>
         {!trip ? (
           <p className={secondaryTextClass}>Loading trip...</p>
@@ -468,11 +474,6 @@ function TripDetails() {
         className={`p-6 rounded-xl shadow ${cardClass}`}
       >
         <h2 className="text-2xl font-bold mb-4">Add Activity</h2>
-        {successMessage && (
-          <p className="mb-4 text-green-600 font-medium">
-            {successMessage}
-          </p>
-        )}
 
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <select

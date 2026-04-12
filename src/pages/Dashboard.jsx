@@ -13,6 +13,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import Toast from "../components/Toast";
 
 function Dashboard() {
   const { user } = useAuth();
@@ -28,6 +29,7 @@ function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const tripFormRef = useRef(null);
+  const [toastType, setToastType] = useState("success");
 
   const cardClass = darkMode
     ? "bg-gray-800 text-white"
@@ -103,6 +105,7 @@ function Dashboard() {
           budget: Number(budget),
         });
 
+        setToastType("success");
         setSuccessMessage("Trip updated succesffully!");
       } else {
         await addDoc(collection(db, "trips"), {
@@ -115,6 +118,7 @@ function Dashboard() {
           createdAt: serverTimestamp(),
         });
 
+        setToastType("success");
         setSuccessMessage("Trip created successfully!");
       }
 
@@ -139,6 +143,7 @@ function Dashboard() {
 
   return (
     <div className="space-y-8">
+      <Toast message={successMessage} type={toastType} />
       <div
         ref={tripFormRef}
         className={`p-6 rounded-xl shadow max-w-3xl mx-auto ${cardClass}`}
@@ -146,12 +151,6 @@ function Dashboard() {
         <h2 className="text-2xl font-bold mb-4">
           {editingTripId ? "Edit Trip" : "Create a New Trip"}
         </h2>
-
-        {successMessage && (
-          <p className="mb-4 text-green-600 font-medium">
-            {successMessage}
-          </p>
-        )}
 
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <input
