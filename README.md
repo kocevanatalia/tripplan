@@ -1,77 +1,42 @@
-# 🌍 TripPlan — Smart Travel Planner
+# TripPlan ✈️
 
-TripPlan is a full-stack web application that helps users plan and organize their trips in one place.
-Users can create trips, manage itineraries day by day, track expenses, and explore locations with integrated maps and weather data.
+## 🌐 Live Demo
+
+👉 https://tripplan-c5ay.vercel.app
+
+---
+
+## 📌 Overview
+
+TripPlan is a full-stack web application that helps users organize and manage their trips in one place.
+
+You can create trips, plan daily activities, track your budget, and visualize locations on an interactive map — all with a clean and intuitive interface.
 
 ---
 
 ## ✨ Features
 
-### 🔐 Authentication
-
-* User signup and login (Firebase Authentication)
-* Protected routes for private pages
-
-### ✈️ Trip Management
-
-* Create, edit, and delete trips
-* Track destination, dates, and budget
-* Search trips by title or destination
-
-### 📅 Itinerary Planning
-
-* Automatically generated trip days
-* Add activities per day
-* Edit and delete activities
-* Activities grouped by day
-* Activities sorted by time
-
-### 🏷️ Categories & Filters
-
-* Assign categories (Food, Sightseeing, Transport, etc.)
-* Filter activities by category
-
-### 💰 Budget Tracking
-
-* Track total activity cost
-* View remaining budget
-* Visual warning when exceeding budget
-
-### 📍 Locations & Maps
-
-* Add location to each activity
-* Open locations in Google Maps
-* View all trip locations in one section
-* Embedded map preview
-
-### 🌤️ Weather Integration
-
-* Fetch real-time weather for trip destination
-* Display temperature and conditions
-
-### 🌙 Dark Mode
-
-* Toggle between light and dark mode
+* 🧳 Create and manage trips
+* 📅 Plan activities by day
+* 📍 Add locations with direct Google Maps access
+* 🗺️ Interactive map with multiple markers
+* 💰 Budget tracking and cost calculation
+* 🌦️ Weather information for trip destinations
+* 🔍 Search and filter activities
+* 🌙 Dark mode with persistent settings
+* 🔔 Toast notifications for actions and errors
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-
-* React (Vite)
-* Tailwind CSS
-* React Router
-
-### Backend / Services
-
-* Firebase Authentication
-* Firebase Firestore
-
-### APIs
-
-* OpenWeather API
-* Google Maps (via links & embed)
+* **Frontend:** React (Vite)
+* **Styling:** Tailwind CSS
+* **Backend / Database:** Firebase Firestore
+* **Authentication:** Firebase Auth
+* **Maps:** Leaflet + OpenStreetMap
+* **Weather API:** OpenWeatherMap
+* **Deployment:** Vercel
 
 ---
 
@@ -80,7 +45,7 @@ Users can create trips, manage itineraries day by day, track expenses, and explo
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/tripplan.git
+git clone https://github.com/kocevanatalia/tripplan.git
 cd tripplan
 ```
 
@@ -92,13 +57,13 @@ npm install
 
 ### 3. Set up environment variables
 
-Create a `.env` file in the root:
+Create a `.env` file in the root directory and add:
 
 ```env
 VITE_OPENWEATHER_API_KEY=your_api_key_here
 ```
 
-### 4. Run the app
+### 4. Run the app locally
 
 ```bash
 npm run dev
@@ -106,22 +71,40 @@ npm run dev
 
 ---
 
-## 📌 Future Improvements
+## 📁 Project Structure
 
-* Persist dark mode using localStorage
-* Add map with multiple markers
-* Show weather for trip dates (forecast)
-* Share trips with other users
-* Improve UI/UX design
+```
+src/
+  components/
+  context/
+  pages/
+  firebase/
+```
 
 ---
 
-## 📷 Screenshots
+## 🔐 Notes
 
-(Add screenshots here later)
+* Firebase configuration is required for authentication and database access
+* Make sure your Firestore rules allow authenticated users to read/write their own data
+
+---
+
+## 🎯 Future Improvements
+
+* Share trips with other users
+* Export itinerary (PDF or image)
+* Drag & drop activity ordering
+* Improved UI/UX and animations
 
 ---
 
 ## 👩‍💻 Author
 
 Natalia Koceva
+
+---
+
+## 📄 License
+
+This project is for educational and portfolio purposes.
