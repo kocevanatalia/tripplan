@@ -56,10 +56,13 @@ function Dashboard() {
   const handleDeleteTrip = async (tripId) => {
     try {
       await deleteDoc(doc(db, "trips", tripId));
+      setToastType("success");
+      setSuccessMessage("Trip deleted successfully!");
       await fetchTrips();
     } catch (error) {
       console.log("Error deleting trip:", error);
-      alert(error.message);
+      setToastType("error");
+      setSuccessMessage("Failed to delete trip");
     }
   };
 
@@ -132,7 +135,8 @@ function Dashboard() {
       await fetchTrips();
     } catch (error) {
       console.log("Firebase error:", error);
-      alert(error.message);
+      setToastType("error");
+      setSuccessMessage(error.message);
     }
   };
 

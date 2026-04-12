@@ -208,10 +208,13 @@ function TripDetails() {
   const handleDeleteActivity = async (activityId) => {
     try {
       await deleteDoc(doc(db, "activities", activityId));
+      setToastType("success");
+      setSuccessMessage("Activity deleted successfully!");
       await fetchActivities();
     } catch (error) {
       console.log("Error deleting activity:", error);
-      alert(error.message);
+      setToastType("error");
+      setSuccessMessage("Failed to delete activity");
     }
   };
 
@@ -267,7 +270,8 @@ function TripDetails() {
       await fetchActivities();
     } catch (error) {
       console.log("Error saving activity:", error);
-      alert(error.message);
+      setToastType("error");
+      setSuccessMessage(error.message);
     }
   };
 
