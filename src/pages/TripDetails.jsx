@@ -27,6 +27,8 @@ function TripDetails() {
   const [category, setCategory] = useState("Other");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [location, setLocation] = useState("");
+  const [weather, setWeather] = useState(null);
+  const [weatherError, setWeatherError] = useState("");
 
   const fetchTrip = async () => {
     try {
@@ -34,7 +36,9 @@ function TripDetails() {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        setTrip({ id: docSnap.id, ...docSnap.data() });
+        const tripData = { id: docSnap.id, ...docSnap.data() };
+        setTrip(tripData);
+        fetchWeather(tripData.destination);
       } else {
         console.log("No such trip found");
       }
@@ -56,6 +60,35 @@ function TripDetails() {
         setActivities(activitiesData);
     } catch (error) {
         console.log("Error fetching activities:", error);
+    }
+  };
+
+  const fetchWeather = async (destination) => {
+    try {
+      setWeatherError("");
+      setWeather(null);
+
+      const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+      console.log("API key:", apiKey);
+      console.log("Destination:", destination);
+
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+          destination
+        )}&appid=${apiKey}&units=metric`
+      );
+
+      const data = await response.json();
+      console.log("Weather response:", data);
+
+      if (!response.ok) {
+        throw new Error(data.message || "Could not fetch weather data");
+      }
+
+      setWeather(data);
+    } catch (error) {
+      console.log("Weather error:", error);
+      setWeatherError(error.message || "Weather data unavailable");
     }
   };
 
@@ -215,6 +248,22 @@ function TripDetails() {
             >
               Remaining Budget: €{remainingBudget}
             </p>
+
+            {weatherError && (
+              <p className="mt-3 text-sm text-red-500">{weatherError}</p>
+            )}
+
+            {weather && (
+              <div className="mt-4 rounded-lg border p-4">
+                <h3 className="text-lg font-semibold">Current Weather</h3>
+                <p className="mt-2">
+                  {weather.name}: {Math.round(weather.main.temp)}°C
+                </p>
+                <p className="text-sm">
+                  {weather.weather?.[0]?.description}
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>
