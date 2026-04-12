@@ -26,6 +26,7 @@ function Dashboard() {
   const [trips, setTrips] = useState([]);
   const [editingTripId, setEditingTripId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const tripFormRef = useRef(null);
 
   const cardClass = darkMode
@@ -79,6 +80,16 @@ function Dashboard() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!successMessage) return;
+
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [successMessage]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -92,7 +103,7 @@ function Dashboard() {
           budget: Number(budget),
         });
 
-        alert("Trip updated!");
+        setSuccessMessage("Trip updated succesffully!");
       } else {
         await addDoc(collection(db, "trips"), {
           title,
@@ -104,7 +115,7 @@ function Dashboard() {
           createdAt: serverTimestamp(),
         });
 
-        alert("Trip created!");
+        setSuccessMessage("Trip created successfully!");
       }
 
       setTitle("");
@@ -135,6 +146,12 @@ function Dashboard() {
         <h2 className="text-2xl font-bold mb-4">
           {editingTripId ? "Edit Trip" : "Create a New Trip"}
         </h2>
+
+        {successMessage && (
+          <p className="mb-4 text-green-600 font-medium">
+            {successMessage}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <input

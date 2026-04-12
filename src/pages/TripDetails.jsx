@@ -67,6 +67,7 @@ function TripDetails() {
   const [cost, setCost] = useState("");
   const [editingActivityId, setEditingActivityId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [weather, setWeather] = useState(null);
   const [weatherError, setWeatherError] = useState("");
@@ -229,7 +230,7 @@ function TripDetails() {
           lon: coordinates.lon,
         });
 
-        alert("Activity updated!");
+        setSuccessMessage("Activity updated succesffully!");
       } else {
         await addDoc(collection(db, "activities"), {
           tripId: id,
@@ -244,7 +245,7 @@ function TripDetails() {
           lon: coordinates.lon,
         });
 
-        alert("Activity added!");
+        setSuccessMessage("Activity added successfully");
       }
 
       setDay("");
@@ -323,6 +324,16 @@ function TripDetails() {
     ],
     [activities]
   );
+
+  useEffect(() => {
+    if (!successMessage) return;
+
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [successMessage]);
 
   useEffect(() => {
     const buildLocationPoints = async () => {
@@ -457,6 +468,11 @@ function TripDetails() {
         className={`p-6 rounded-xl shadow ${cardClass}`}
       >
         <h2 className="text-2xl font-bold mb-4">Add Activity</h2>
+        {successMessage && (
+          <p className="mb-4 text-green-600 font-medium">
+            {successMessage}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <select
