@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { db } from "../firebase/config";
 import {
   addDoc,
@@ -15,6 +16,7 @@ import {
 
 function Dashboard() {
   const { user } = useAuth();
+  const { darkMode } = useTheme();
 
   const [title, setTitle] = useState("");
   const [destination, setDestination] = useState("");
@@ -24,6 +26,16 @@ function Dashboard() {
   const [trips, setTrips] = useState([]);
   const [editingTripId, setEditingTripId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const cardClass = darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-gray-900";
+
+  const inputClass = darkMode
+    ? "border p-3 rounded-lg bg-gray-700 text-white border-gray-600 placeholder-gray-300"
+    : "border p-3 rounded-lg bg-white text-gray-900 border-gray-300";
+
+  const secondaryTextClass = darkMode ? "text-gray-300" : "text-gray-600";
 
   const fetchTrips = async () => {
     const q = query(collection(db, "trips"), where("userId", "==", user.uid));
@@ -104,21 +116,23 @@ function Dashboard() {
     }
   };
 
-  const filteredTrips = trips.filter((trip) => 
+  const filteredTrips = trips.filter((trip) =>
     trip.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    trip.destination.toLowerCase().includes(searchTerm.toLowerCase()) 
+    trip.destination.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="space-y-8">
-      <div className="bg-white p-6 rounded-xl shadow max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">Create a New Trip</h2>
+      <div className={`p-6 rounded-xl shadow max-w-3xl mx-auto ${cardClass}`}>
+        <h2 className="text-2xl font-bold mb-4">
+          {editingTripId ? "Edit Trip" : "Create a New Trip"}
+        </h2>
 
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <input
             type="text"
             placeholder="Trip title"
-            className="border p-3 rounded-lg"
+            className={inputClass}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -127,7 +141,7 @@ function Dashboard() {
           <input
             type="text"
             placeholder="Destination"
-            className="border p-3 rounded-lg"
+            className={inputClass}
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
             required
@@ -135,7 +149,7 @@ function Dashboard() {
 
           <input
             type="date"
-            className="border p-3 rounded-lg"
+            className={inputClass}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             required
@@ -143,7 +157,7 @@ function Dashboard() {
 
           <input
             type="date"
-            className="border p-3 rounded-lg"
+            className={inputClass}
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             required
@@ -152,7 +166,7 @@ function Dashboard() {
           <input
             type="number"
             placeholder="Budget"
-            className="border p-3 rounded-lg md:col-span-2"
+            className={`${inputClass} md:col-span-2`}
             value={budget}
             onChange={(e) => setBudget(e.target.value)}
             required
@@ -171,25 +185,33 @@ function Dashboard() {
           <input
             type="text"
             placeholder="Search by title or destination"
-            className="border p-3 rounded-lg w-full md:w-80"
+            className={`p-3 rounded-lg w-full md:w-80 border ${
+              darkMode
+                ? "bg-gray-800 text-white border-gray-600 placeholder-gray-300"
+                : "bg-white text-gray-900 border-gray-300"
+            }`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
         {filteredTrips.length === 0 ? (
-          <p className="text-gray-600">No trips yet.</p>
+          <p className={secondaryTextClass}>No trips yet.</p>
         ) : (
           <div className="grid gap-4">
             {filteredTrips.map((trip) => (
-              <div key={trip.id} className="bg-white p-5 rounded-xl shadow cursor-pointer hover:shadow-lg transtition"
-              onClick={() => window.location.href = `/trip/${trip.id}`}>
+              <div
+                key={trip.id}
+                className={`p-5 rounded-xl shadow cursor-pointer transition hover:shadow-lg ${cardClass}`}
+                onClick={() => (window.location.href = `/trip/${trip.id}`)}
+              >
                 <h3 className="text-xl font-semibold">{trip.title}</h3>
-                <p className="text-gray-600">{trip.destination}</p>
+                <p className={secondaryTextClass}>{trip.destination}</p>
                 <p className="mt-2 text-sm">
                   {trip.startDate} → {trip.endDate}
                 </p>
                 <p className="mt-2 font-medium">Budget: €{trip.budget}</p>
+
                 <div className="mt-4">
                   <button
                     onClick={(e) => {
@@ -200,15 +222,17 @@ function Dashboard() {
                   >
                     Edit Trip
                   </button>
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteTrip(trip.id);
                     }}
-                    className="text-red-500 hover:underline">
-                      Delete Trip
-                    </button>
-                  </div>
+                    className="text-red-500 hover:underline"
+                  >
+                    Delete Trip
+                  </button>
+                </div>
               </div>
             ))}
           </div>
