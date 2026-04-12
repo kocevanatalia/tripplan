@@ -1,64 +1,88 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
+import Toast from "../components/Toast";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
 
   const { login } = useAuth();
+  const { darkMode } = useTheme();
   const navigate = useNavigate();
+
+  const cardClass = darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-gray-900";
+
+  const inputClass = darkMode
+    ? "border p-3 rounded-lg bg-gray-700 text-white border-gray-600 placeholder-gray-300"
+    : "border p-3 rounded-lg bg-white text-gray-900 border-gray-300";
+
+  useEffect(() => {
+    if (!successMessage) return;
+
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [successMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
     try {
       await login(email, password);
       navigate("/dashboard");
     } catch (err) {
-      setError("Failed to log in");
       console.log(err);
+      setToastType("error");
+      setSuccessMessage("Failed to log in");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-4">Log In</h2>
+    <div className="max-w-md mx-auto">
+      <Toast message={successMessage} type={toastType} />
 
-      {error && <p className="text-red-500 mb-3">{error}</p>}
+      <div className={`p-6 rounded-xl shadow ${cardClass}`}>
+        <h2 className="text-2xl font-bold mb-4">Log In</h2>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="email"
-          placeholder="Email"
-          className="border p-3 rounded-lg"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <input
+            type="email"
+            placeholder="Email"
+            className={inputClass}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="border p-3 rounded-lg"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            className={inputClass}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <button className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
-          Log In
-        </button>
-      </form>
+          <button className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+            Log In
+          </button>
+        </form>
 
-      <p className="mt-4 text-sm">
-        Don’t have an account?{" "}
-        <Link to="/signup" className="underline">
-          Sign up
-        </Link>
-      </p>
+        <p className={`mt-4 text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+          Don’t have an account?{" "}
+          <Link to="/signup" className="underline">
+            Sign up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

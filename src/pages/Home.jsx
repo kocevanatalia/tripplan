@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 function Home() {
+  const { darkMode } = useTheme();
+
   return (
     <div className="flex flex-col items-center justify-center text-center py-20">
       <h1 className="text-5xl font-bold text-blue-600">TripPlan</h1>
-      <p className="mt-4 text-lg text-gray-600 max-w-2xl">
+      <p
+        className={`mt-4 text-lg max-w-2xl ${
+          darkMode ? "text-gray-300" : "text-gray-600"
+        }`}
+      >
         Organize your trips, plan your itinerary, and keep everything in one place.
       </p>
 
@@ -17,7 +24,11 @@ function Home() {
         </Link>
         <Link
           to="/login"
-          className="border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50"
+          className={`px-6 py-3 rounded-lg border ${
+            darkMode
+              ? "border-gray-600 text-white hover:bg-gray-800"
+              : "border-gray-300 text-gray-900 hover:bg-gray-50"
+          }`}
         >
           Log In
         </Link>
