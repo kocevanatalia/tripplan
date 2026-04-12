@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { db } from "../firebase/config";
@@ -26,6 +26,7 @@ function Dashboard() {
   const [trips, setTrips] = useState([]);
   const [editingTripId, setEditingTripId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const tripFormRef = useRef(null);
 
   const cardClass = darkMode
     ? "bg-gray-800 text-white"
@@ -66,6 +67,10 @@ function Dashboard() {
     setEndDate(trip.endDate || "");
     setBudget(trip.budget || "");
     setEditingTripId(trip.id);
+    tripFormRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   useEffect(() => {
@@ -123,7 +128,10 @@ function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div className={`p-6 rounded-xl shadow max-w-3xl mx-auto ${cardClass}`}>
+      <div
+        ref={tripFormRef}
+        className={`p-6 rounded-xl shadow max-w-3xl mx-auto ${cardClass}`}
+      >
         <h2 className="text-2xl font-bold mb-4">
           {editingTripId ? "Edit Trip" : "Create a New Trip"}
         </h2>

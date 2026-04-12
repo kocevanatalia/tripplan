@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase/config";
 import { useTheme } from "../context/ThemeContext";
@@ -76,6 +76,8 @@ function TripDetails() {
 
   const [lat, setLat] = useState(null);
   const [lon, setLon] = useState(null);
+
+  const activityFormRef = useRef(null);
 
   const cardClass = darkMode
     ? "bg-gray-800 text-white"
@@ -191,6 +193,10 @@ function TripDetails() {
     setNotes(activity.notes || "");
     setCost(activity.cost || "");
     setEditingActivityId(activity.id);
+    activityFormRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
     setLat(activity.lat ?? null);
     setLon(activity.lon ?? null);
   };
@@ -446,7 +452,10 @@ function TripDetails() {
         )}
       </div>
 
-      <div className={`p-6 rounded-xl shadow ${cardClass}`}>
+      <div 
+        ref={activityFormRef}
+        className={`p-6 rounded-xl shadow ${cardClass}`}
+      >
         <h2 className="text-2xl font-bold mb-4">Add Activity</h2>
 
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
