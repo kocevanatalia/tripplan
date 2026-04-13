@@ -8,9 +8,14 @@
 
 ## 📌 Overview
 
-TripPlan is a full-stack web application that helps users organize and manage their trips in one place.
+TripPlan is a full-stack travel planning application designed to help users organize trips, manage itineraries, track budgets, and visualize locations in one place.
 
 You can create trips, plan daily activities, track your budget, and visualize locations on an interactive map — all with a clean and intuitive interface.
+
+---
+
+🎯 Purpose
+This project was built to simulate a real-world application, combining frontend development, backend integration, and user-focused design.
 
 ---
 
@@ -37,6 +42,7 @@ You can create trips, plan daily activities, track your budget, and visualize lo
 * **Maps:** Leaflet + OpenStreetMap
 * **Weather API:** OpenWeatherMap
 * **Deployment:** Vercel
+* **Architecture:** Component-based frontend with modular structure
 
 ---
 
