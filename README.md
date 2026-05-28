@@ -8,24 +8,24 @@
 
 ## 📸 Screenshots
 
-#Homepage - Light & Dark Mode
-<img width="1470" height="919" alt="homepage-light" src="https://github.com/user-attachments/assets/3f6e7b54-cb40-4edb-8f52-273ba7541648" />
-<img width="1470" height="919" alt="homepage-dark" src="https://github.com/user-attachments/assets/75ac7dc2-de6a-4ad7-a8f1-a99ee89735da" />
+### Homepage (Light & Dark Mode)
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3f6e7b54-cb40-4edb-8f52-273ba7541648" width="45%"/>
+  <img src="https://github.com/user-attachments/assets/75ac7dc2-de6a-4ad7-a8f1-a99ee89735da" width="45%"/>
+</p>
 
+### Dashboard
 
-#Trip Dashboard
-<img width="1470" height="919" alt="dashboard" src="https://github.com/user-attachments/assets/0d8544f8-8165-4906-81f0-bf810c939145" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0d8544f8-8165-4906-81f0-bf810c939145" width="85%"/>
+</p>
 
+### Interactive Map
 
-#Trips
-<img width="1470" height="919" alt="trip" src="https://github.com/user-attachments/assets/979a119b-4540-483e-82c2-d0b1e4e8c1fa" />
-<img width="1470" height="919" alt="interactive-map" src="https://github.com/user-attachments/assets/3d882f9f-2860-416a-87a2-066a3ce67d17" />
-
-
-
-
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3d882f9f-2860-416a-87a2-066a3ce67d17" width="85%"/>
+</p>
 
 ---
 
