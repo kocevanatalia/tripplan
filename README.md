@@ -6,16 +6,37 @@
 
 ---
 
+## 📸 Screenshots
+
+#Homepage - Light & Dark Mode
+<img width="1470" height="919" alt="homepage-light" src="https://github.com/user-attachments/assets/3f6e7b54-cb40-4edb-8f52-273ba7541648" />
+<img width="1470" height="919" alt="homepage-dark" src="https://github.com/user-attachments/assets/75ac7dc2-de6a-4ad7-a8f1-a99ee89735da" />
+
+
+
+#Trip Dashboard
+<img width="1470" height="919" alt="dashboard" src="https://github.com/user-attachments/assets/0d8544f8-8165-4906-81f0-bf810c939145" />
+
+
+#Trips
+<img width="1470" height="919" alt="trip" src="https://github.com/user-attachments/assets/979a119b-4540-483e-82c2-d0b1e4e8c1fa" />
+<img width="1470" height="919" alt="interactive-map" src="https://github.com/user-attachments/assets/3d882f9f-2860-416a-87a2-066a3ce67d17" />
+
+
+
+
+
+
+---
+
 ## 📌 Overview
 
-TripPlan is a full-stack travel planning application designed to help users organize trips, manage itineraries, track budgets, and visualize locations in one place.
-
-You can create trips, plan daily activities, track your budget, and visualize locations on an interactive map — all with a clean and intuitive interface.
+TripPlan is a full-stack travel planning web application that helps users organize trips, manage itineraries, track budgets, and visualize destinations through an interactive map interface.
 
 ---
 
 🎯 Purpose
-This project was built to simulate a real-world application, combining frontend development, backend integration, and user-focused design.
+The project was developed using modern AI-assisted development workflows for debugging, iteration, and feature development.
 
 ---
 
@@ -102,6 +123,16 @@ src/
 * Export itinerary (PDF or image)
 * Drag & drop activity ordering
 * Improved UI/UX and animations
+
+---
+
+## 📚 Key Learning Outcomes
+
+- Building scalable React component structures
+- Managing authentication and cloud databases with Firebase
+- Integrating third-party APIs into production-ready applications
+- Designing responsive user interfaces
+- Deploying full-stack applications using Vercel
 
 ---
 
